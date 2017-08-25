@@ -1,0 +1,112 @@
+<div id="loader" *ngIf="disabled">
+    <img src="../assets/images/loader.gif">
+</div>
+<div class="container">
+    <div class="col-md-10 col-md-offset-1">
+        <h4 class="text-center">Location</h4>
+        <button class="btn btn-success btn-block" (click)="showAddLocationForm()">Add Location</button>
+        <br>
+        <div class="row">
+            <div class="col-md-4">
+                <input type="range" value="0" step="1000" max="1000000" class="range-slider" #min>
+                    <br>
+                Min : <span class="current-range-slider"></span>
+            </div>
+
+            <div class="col-md-4">
+                <input type="range" value="0" step="1000" max="1000000"  class="range-slider" #max>
+                    <br>
+                Max : <span class="current-range-slider"></span>
+            </div>
+
+            <div class="col-md-4">
+                <button class="btn btn-info" (click)="filterLocations(min.value, max.value)">Filter</button>
+            </div>
+        </div>
+    
+        <br>
+        <table class="table" *ngIf="locations.length > 0">
+            <tr>
+                <th>Location Name</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Zip</th>
+                <th>Photo</th>
+                <th>Action</th>
+            </tr>
+
+            <tr *ngFor="let location of locations">
+                <td>{{ location.obj.name | uppercase }}</td>
+                <td>{{ location.obj.city | uppercase }}</td>
+                <td>{{ location.obj.state | uppercase }}</td>
+                <td>{{ location.obj.zip  }}</td>
+                <td>
+                    <span *ngIf="location.obj.photos.length == 0">No Photo Uploaded</span>
+                    <img *ngIf="location.obj.photos.length > 0" src="{{ imageUrl+location.obj.photos[0] }}" class="location-photo img-responsive">
+                </td>
+                <td>
+                    <button 
+                        [class.btn-success]="location.obj.favorite" class="btn" (click)="addToFavorite(location.obj._id)">
+                        <span class="fa fa-heart-o"></span>
+                    </button>
+                    <button class="btn btn-default" (click)="showAddUpdateForm(location.obj)">Edit</button>
+                    <button class="btn btn-danger" (click)="deleteLocation(location.obj._id)">Delete</button>
+                    <label class="btn btn-primary fa fa-upload" style="width:40px;height:35px">
+                        <input type="hidden" value="{{ location.obj._id }}" #location_id>
+                        <input type="file" (change)="upload($event, location_id.value)" style="visibility: hidden" />
+                    </label>
+                </td>
+            </tr>
+        </table>
+        
+        <div *ngIf="locations.length == 0">
+           <h4>You haven't add any location</h4> 
+        </div>
+        <input type="hidden" id="longitude"  #longitude>
+        <input type="hidden" id="latitude" #latitude>
+        <div class="add-location" [class.hide]="!showForm">
+            <form method="post" (ngSubmit)="addLocation(form, longitude.value, latitude.value, user_id.value)" #form="ngForm">
+                <div class="form-group">
+                    <input type="text" name="name" ngModel class="form-control" placeholder="Location Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="city" ngModel class="form-control" placeholder="City" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="state" ngModel class="form-control" placeholder="State" required>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" name="zip" ngModel class="form-control" placeholder="Zip" required>
+                </div>
+
+                <input type="hidden" name="user_id" value="{{ userId }}" #user_id>                
+                <button class="btn btn-primary">Add Location</button>
+
+
+            </form>
+        </div>
+        <div class="update-location" *ngIf="showUpdateForm">
+                <form method="post" (ngSubmit)="updateLocation(form)" #form="ngForm">
+                    <div class="form-group">
+                        <input type="text" name="name"  class="form-control" placeholder="Location Name" [(ngModel)]="name">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="city" class="form-control" placeholder="City"  [(ngModel)]="city">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="state" class="form-control" placeholder="State"  [(ngModel)]="state">
+                    </div>
+    
+                    <div class="form-group">
+                        <input type="text" name="zip" class="form-control" placeholder="Zip"  [(ngModel)]="zip">
+                    </div>
+
+                    <input type="hidden" name="location_id" class="form-control" [(ngModel)]="location_id">
+                    
+                    <button class="btn btn-primary">Update Location</button>
+                </form>
+            </div>
+
+    </div>
+</div>

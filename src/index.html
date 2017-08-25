@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Location Service</title>
+  <base href="/">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+  <script>
+      function getLocation() {
+          if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(showPosition);
+          } else {
+              x.innerHTML = "Geolocation is not supported by this browser.";
+          }
+      }
+
+      function showPosition(position) {
+         var longitude = document.getElementById("longitude");
+         var latitude = document.getElementById("latitude"); 
+         longitude.value = position.coords.longitude;
+         latitude.value = position.coords.latitude;
+         console.log(position.coords.longitude);
+         console.log(position.coords.latitude);
+         console.log(longitude);
+         console.log(latitude);
+      }
+      </script>
+</head>
+<body onload="getLocation()">
+  <app-root></app-root>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+  <script src="assets/js/custom.js"></script>
+</body>
+</html>
